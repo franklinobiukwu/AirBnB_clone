@@ -26,7 +26,6 @@ class FileStorage:
         
         for key, value in FileStorage.__objects.items():
             new_dict[key] = value.to_dict()
-        print(new_dict)     
         with open(FileStorage.__file_path, "w") as file:
             dump(new_dict, file)
     
