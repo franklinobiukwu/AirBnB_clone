@@ -19,6 +19,7 @@ class BaseModel:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.datetime.now()
             self.updated_at = datetime.datetime.now()
+            storage.new(self)
 
 
     def __str__(self):
@@ -28,6 +29,7 @@ class BaseModel:
     def save(self):
         """Updates public instance attribute of updated_at"""
         self.updated_at = datetime.datetime.now()
+        storage.save()
 
     def to_dict(self):
         """Return dict containing key value pairs of instances"""
