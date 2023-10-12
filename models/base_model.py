@@ -2,6 +2,7 @@
 """BaseModel Class Module"""
 import uuid
 import datetime
+from models import storage
 
 
 class BaseModel:
