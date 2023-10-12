@@ -32,10 +32,22 @@ class FileStorage:
     
     def reload(self):
         """Reload a string into a dict"""
+        object = {}
         if os.path.exists(FileStorage.__file_path):
             with open(FileStorage.__file_path, "r") as file:
-                FileStorage.__objects = load(file)
-        else:
-            return
+                object = loads(file.read())
+            from models.base_model import BaseModel
+            for key, value in object.items():
+                class_name = value["__class__"]
+                del(value["__class__"])
+                if class_name == "BaseModel":
+                    obj = BaseModel(**value)
+                    object[key] = obj
+                
+        FileStorage.__objects = object
+                
+            
+            
+                
         
         
