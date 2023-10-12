@@ -18,7 +18,7 @@ class FileStorage:
         """Adds a new object to the storage"""
         key = f"{obj.__class__.__name__}.{obj.id}"
         FileStorage.__objects[key] = obj
-#        print(FileStorage.__objects)
+
         
     def save(self):
         """Saves object to json file"""
