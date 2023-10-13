@@ -5,13 +5,28 @@ import json
 from models.base_model import BaseModel
 from models import storage
 from models.engine.file_storage import FileStorage
+from models.amenity import Amenity
+from models.place import Place
+from models.city import City
+from models.review import Review
+from models.user import User
+from models.state import State
 
 
 class HBNBCommand(cmd.Cmd):
     """Command interpreter class"""
 
     prompt = "(hbnb) "
-    app_models = ["BaseModel"]
+    app_models = ["BaseModel", "User", "Place", "State", "City", "Amenity", "Review"]
+    model_classes = {
+            "BaseModel": BaseModel,
+            "User": User, 
+            "State": State, 
+            "Review": Review,
+            "Place": Place,  
+            "City": City,
+            "Amenity": Amenity,
+        }
 
     # HELPER METHODS#
     def search_id(self, class_name, id):
@@ -21,11 +36,26 @@ class HBNBCommand(cmd.Cmd):
         with open(file_path, "r") as file:
             dict_var = json.load(file)
         print(dict_var)
-    
-    def delete_instance(class_name, id):
-        """Delete an instance with a given class name and id"""
         
+    def del_instance(self, class_name, id):
+        """Delete an instance with a given class name and id"""
+    
         file_path = FileStorage.get_file_path()
+        
+        # OPEN JSON FILE
+        with open(file_path, "r+") as file:
+            dict_var = json.load(file)
+            
+            if class_name in dict_var and id in dict_var[class_name]:
+                del(dict_var[class_name][id])
+            
+                with open(file_path, "w") as file:
+                    json.dump(dict_var, file)
+                
+                    return True
+            else:
+                return False
+
         
     # DO COMMANDS#
     def do_quit(self, args):
@@ -43,10 +73,14 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
         elif args not in self.app_models:
             print("** class doesn't exist **")
-        else:
-            new_base_model = BaseModel()
-            new_base_model.save()
-            print(new_base_model.id)
+        else: 
+            class_name = args
+            model_class = self.model_classes[class_name]
+            
+            new_instance = model_class()
+            new_instance.save()
+            print(new_instance.id)
+            
 
     def do_show(self, args):
         """Show string representation of an instance
@@ -84,7 +118,7 @@ class HBNBCommand(cmd.Cmd):
                 if class_name not in self.app_models:
                     print("** class doesn't exist **")
                 else:
-                    deleted = self.delete_instance(class_name, id)
+                    deleted = self.del_instance(class_name, id)
                     if not deleted:
                         print("** no instance found **")
 
