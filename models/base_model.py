@@ -13,7 +13,8 @@ class BaseModel:
         if kwargs:
             for key, value in kwargs.items():
                 if key == "created_at" or key == "updated_at":
-                    value = datetime.datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
+                    value = datetime.datetime.strptime(value,
+                                                       "%Y-%m-%dT%H:%M:%S.%f")
                 if key != "__class__":
                     setattr(self, key, value)
         else:
@@ -22,6 +23,17 @@ class BaseModel:
             self.updated_at = datetime.datetime.now()
             storage.new(self)
 
+    # HELPER METHODS
+    def to_dict_no_class(self):
+        """Return dict containing key value
+        pairs of instances without class name"""
+        dict = {}
+        for key, value in self.__dict__.items():
+            if key == "created_at" or key == "updated_at":
+                dict[key] = value.isoformat()
+            else:
+                dict[key] = value
+        return dict
 
     def __str__(self):
         """Return string representation of instance of class"""
@@ -30,16 +42,16 @@ class BaseModel:
     def save(self):
         """Updates public instance attribute of updated_at"""
         self.updated_at = datetime.datetime.now()
+        storage.new(self)
         storage.save()
 
     def to_dict(self):
         """Return dict containing key value pairs of instances"""
         dict = {}
         for key, value in self.__dict__.items():
-            dict[key] = value
-            if key == "created_at":
+            if key == "created_at" or key == "updated_at":
                 dict[key] = value.isoformat()
-            if key == "updated_at":
-                dict[key] = value.isoformat()
+            else:
+                dict[key] = value
         dict["__class__"] = self.__class__.__name__
         return dict
