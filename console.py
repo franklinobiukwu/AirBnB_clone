@@ -39,7 +39,7 @@ class HBNBCommand(cmd.Cmd):
         
     def del_instance(self, class_name, id):
         """Delete an instance with a given class name and id"""
-        #JSON FILE FIX NEEDED
+        #TO BE IMPLEMENTED CORRECTLY
     
         file_path = FileStorage.get_file_path()
         
@@ -58,11 +58,15 @@ class HBNBCommand(cmd.Cmd):
                 return False
 
     def find_string_rep(self, class_name=None):
-        """Finds string rep in JSON file"""
+        #TO BE IMPLEMENETED CORRECTLY
         result_list = []
-        return True
-        
-        
+        if class_name is not None:
+            # Print the string representation for the specified class
+            return True
+        else:
+            # Print all the string representations from storage
+            return False
+
     # DO COMMANDS#
     def do_quit(self, args):
         """Quit command to exit the program"""
@@ -124,31 +128,32 @@ class HBNBCommand(cmd.Cmd):
                 if class_name not in self.app_models:
                     print("** class doesn't exist **")
                 else:
+                    #Implement a functioning del_instance()
                     deleted = self.del_instance(class_name, id)
                     if not deleted:
                         print("** no instance found **")
     
     def do_all(self, args):
         """Prints all string representation of all instances based or not on the class name"""
-        
-        if len(args) == 1:
-            class_name = args[0]
+        if args:
+            class_name = args
             if class_name not in self.app_models:
                 print("** class doesn't exist **")
             else:
+                string_rep = []
+                #Implement a functioning find_string_rep()
                 string_rep = self.find_string_rep(class_name)
                 print(string_rep)
-        else:
-            all_strings = []
-            for class_name in self.app_models:
-                string_rep = self.find_string_rep()
-                all_strings.extend(string_rep)
-            print(all_strings)
-
+        else: 
+            string_rep = self.find_string_rep()
+            print(string_rep)
+            
+    #EMPTYLINE 
     def emptyline(self):
         """Prevents emptyline from executing previous command"""
         pass
 
+    #HELP METHODS
     def help_EOF(self):
         """Shows exit message for EOF"""
         print(f"Quit command to exit the program")
@@ -160,6 +165,18 @@ class HBNBCommand(cmd.Cmd):
     def help_create(self):
         """Handles the help default for create command"""
         print(f"Create instance of [class], saves to json, and print id")
+    
+    def help_show(self):
+        """Handle the help default for show command"""
+        print(f"Prints the string representation of an instance based on the class name and id")
+    
+    def help_destroy(self):
+        """Handle the help default for the destroy command"""
+        print(f"Deletes an instance based on the class name and id")
+
+    def help_all(self):
+        """Handle the help default for the all command"""
+        print(f"Prints all string representation of all instances based or not on the class name.")
 
 
 if __name__ == '__main__':
