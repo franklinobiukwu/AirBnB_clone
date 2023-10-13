@@ -1,19 +1,33 @@
 #!/usr/bin/python3
 """Implemntation of the command interpreter"""
 import cmd
+import json
 from models.base_model import BaseModel
-from models.user import User
-from models.state import State
-from models.city import City
-from models.place import Place
-from models.amenity import Amenity
-from models.review import Review
+from models import storage
+from models.engine.file_storage import FileStorage
+
 
 class HBNBCommand(cmd.Cmd):
     """Command interpreter class"""
 
-    prompt = "(hbnb)"
+    prompt = "(hbnb) "
+    app_models = ["BaseModel"]
 
+    # HELPER METHODS#
+    def search_id(self, class_name, id):
+        """Search if id is in json file with corresponding class"""
+        file_path = FileStorage.get_file_path()
+        # Load json file to dictionary variable
+        with open(file_path, "r") as file:
+            dict_var = json.load(file)
+        print(dict_var)
+    
+    def delete_instance(class_name, id):
+        """Delete an instance with a given class name and id"""
+        
+        file_path = FileStorage.get_file_path()
+        
+    # DO COMMANDS#
     def do_quit(self, args):
         """Quit command to exit the program"""
         return True
@@ -23,21 +37,73 @@ class HBNBCommand(cmd.Cmd):
         print()
         return True
 
+    def do_create(self, args):
+        """Creates new instance of BaseModel"""
+        if len(args) == 0:
+            print("** class name missing **")
+        elif args not in self.app_models:
+            print("** class doesn't exist **")
+        else:
+            new_base_model = BaseModel()
+            new_base_model.save()
+            print(new_base_model.id)
+
+    def do_show(self, args):
+        """Show string representation of an instance
+        based on class name & id"""
+        # Print *missing* if class name missing
+        if not args:
+            print("** class name missing **")
+        else:
+            try:
+                class_name, id = args.split(" ")
+            except (ValueError):
+                return print("** instance id missing **")
+
+            if class_name not in self.app_models:
+                print("** class doesn't exist **")
+            else:
+                print("About to search id")
+                self.search_id(class_name, id)
+        # Print *no inst found* if id is not for class
+    
+    def do_destroy(self, args):
+        """Deletes an instance based on the class name and id"""
+        if not args:
+            print("** class name missing **")
+        else:
+            split_args = args.split(" ")
+            if len(split_args) == 1:
+                class_name = split_args[0]
+                if class_name not in self.app_models:
+                    print("** class doesn't exist **")
+                else:
+                    print("** instance id missing **")
+            elif len(split_args) == 2:
+                class_name, id = split_args
+                if class_name not in self.app_models:
+                    print("** class doesn't exist **")
+                else:
+                    deleted = self.delete_instance(class_name, id)
+                    if not deleted:
+                        print("** no instance found **")
+
+
     def emptyline(self):
         """Prevents emptyline from executing previous command"""
         pass
 
     def help_EOF(self):
         """Shows exit message for EOF"""
-        return self.help_text()
+        print(f"Quit command to exit the program")
 
     def help_quit(self):
         """Shows exit message for Quit"""
-        return self.help_text()
-
-    def help_text(self):
-        """Help Text printed with program is exited"""
         print(f"Quit command to exit the program")
+
+    def help_create(self):
+        """Handles the help default for create command"""
+        print(f"Create instance of [class], saves to json, and print id")
 
 
 if __name__ == '__main__':
