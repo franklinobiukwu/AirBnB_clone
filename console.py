@@ -39,6 +39,7 @@ class HBNBCommand(cmd.Cmd):
         
     def del_instance(self, class_name, id):
         """Delete an instance with a given class name and id"""
+        #JSON FILE FIX NEEDED
     
         file_path = FileStorage.get_file_path()
         
@@ -56,6 +57,11 @@ class HBNBCommand(cmd.Cmd):
             else:
                 return False
 
+    def find_string_rep(self, class_name=None):
+        """Finds string rep in JSON file"""
+        result_list = []
+        return True
+        
         
     # DO COMMANDS#
     def do_quit(self, args):
@@ -121,7 +127,23 @@ class HBNBCommand(cmd.Cmd):
                     deleted = self.del_instance(class_name, id)
                     if not deleted:
                         print("** no instance found **")
-
+    
+    def do_all(self, args):
+        """Prints all string representation of all instances based or not on the class name"""
+        
+        if len(args) == 1:
+            class_name = args[0]
+            if class_name not in self.app_models:
+                print("** class doesn't exist **")
+            else:
+                string_rep = self.find_string_rep(class_name)
+                print(string_rep)
+        else:
+            all_strings = []
+            for class_name in self.app_models:
+                string_rep = self.find_string_rep()
+                all_strings.extend(string_rep)
+            print(all_strings)
 
     def emptyline(self):
         """Prevents emptyline from executing previous command"""
