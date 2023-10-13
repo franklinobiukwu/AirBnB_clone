@@ -2,7 +2,13 @@
 """FileStorage Class Module"""
 from json import loads, dumps, load, dump
 import os
-
+from models.base_model import BaseModel
+from models.user import User
+from models.state import State
+from models.city import City
+from models.place import Place
+from models.amenity import Amenity
+from models.review import Review
 
 class FileStorage:
     """ FileStorage class that save and reloads to JSON file"""
@@ -31,19 +37,33 @@ class FileStorage:
     
     def reload(self):
         """Reload a string into a dict"""
-        object = {}
+
+        class_mappings = {
+            "BaseModel": BaseModel,
+            "User": User,
+            "State": State,
+            "City": City,
+            "Place": Place,
+            "Amenity": Amenity,
+            "Review": Review
+        }
+        
+        loaded_objects = {}
+        
         if os.path.exists(FileStorage.__file_path):
             with open(FileStorage.__file_path, "r") as file:
                 object = loads(file.read())
-            from models.base_model import BaseModel
+            
             for key, value in object.items():
-                class_name = value["__class__"]
-                del(value["__class__"])
-                if class_name == "BaseModel":
-                    obj = BaseModel(**value)
-                    object[key] = obj
-                
-        FileStorage.__objects = object
+                class_name = value.pop("__class__", None)
+                if class_name and class_name in class_mappings:
+                    obj_class = class_mappings[class_name]
+                    obj = obj_class(**value)
+                    loaded_objects[key] = obj
+
+        FileStorage.__objects = loaded_objects
+
+     
                 
             
             
