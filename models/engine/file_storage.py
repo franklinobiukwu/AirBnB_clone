@@ -34,3 +34,7 @@ class FileStorage:
                 self.__objects = json.load(file)
         else:
             return
+
+    @classmethod
+    def get_file_path(cls):
+        return cls.__file_path

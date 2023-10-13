@@ -16,8 +16,9 @@ class HBNBCommand(cmd.Cmd):
     # HELPER METHODS#
     def search_id(self, class_name, id):
         """Search if id is in json file with corresponding class"""
+        file_path = FileStorage.get_file_path()
         # Load json file to dictionary variable
-        with open(FileStorage.__file_path, "r") as file:
+        with open(file_path, "r") as file:
             dict_var = json.load(file)
         print(dict_var)
 
