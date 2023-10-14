@@ -5,5 +5,5 @@ from models.base_model import BaseModel
 
 class State(BaseModel):
     """Represents an instance of a state"""
-    
+
     name = ""

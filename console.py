@@ -17,7 +17,8 @@ class HBNBCommand(cmd.Cmd):
     """Command interpreter class"""
 
     prompt = "(hbnb) "
-    app_models = ["BaseModel", "User", "Place", "State", "City", "Amenity", "Review"]
+    app_models = ["BaseModel", "User", "Place", "State",
+                  "City", "Amenity", "Review"]
     model_classes = {
             "BaseModel": BaseModel,
             "User": User,
@@ -80,7 +81,6 @@ class HBNBCommand(cmd.Cmd):
             else:
                 return False
 
-
     # DO COMMANDS#
     def do_quit(self, args):
         """Quit command to exit the program"""
@@ -104,7 +104,6 @@ class HBNBCommand(cmd.Cmd):
             new_instance = model_class()
             new_instance.save()
             print(new_instance.id)
-
 
     def do_show(self, args):
         """Show string representation of an instance
@@ -146,13 +145,13 @@ class HBNBCommand(cmd.Cmd):
                         print("** no instance found **")
 
     def do_all(self, args):
-        """Prints all string representation of all instances based or not on the class name"""
+        """Prints all string representation of all
+        instances based or not on the class name"""
         if args:
             class_name = args
             if class_name not in self.app_models:
                 print("** class doesn't exist **")
             else:
-                #Implement a functioning find_string_rep()
                 string_rep = self.find_string_rep(class_name)
                 print(string_rep)
         else:
@@ -160,15 +159,16 @@ class HBNBCommand(cmd.Cmd):
             print(string_rep)
 
     def do_update(self, args):
-        """Updates an instance based on the class name and id by adding or updating attribute"""
+        """Updates an instance based on the class name
+        and id by adding or updating attribute"""
+        pass
 
-
-    #EMPTYLINE 
+#   EMPTYLINE
     def emptyline(self):
         """Prevents emptyline from executing previous command"""
         pass
 
-    #HELP METHODS
+#   HELP METHODS
     def help_EOF(self):
         """Shows exit message for EOF"""
         print(f"Quit command to exit the program")
@@ -183,7 +183,7 @@ class HBNBCommand(cmd.Cmd):
 
     def help_show(self):
         """Handle the help default for show command"""
-        print(f"Prints the string representation of an instance based on the class name and id")
+        print(f"Prints the string representation of an instance")
 
     def help_destroy(self):
         """Handle the help default for the destroy command"""
@@ -191,7 +191,7 @@ class HBNBCommand(cmd.Cmd):
 
     def help_all(self):
         """Handle the help default for the all command"""
-        print(f"Prints all string representation of all instances based or not on the class name.")
+        print(f"Prints all string representation of all instances.")
 
 
 if __name__ == '__main__':

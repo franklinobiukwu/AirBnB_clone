@@ -1,4 +1,3 @@
-
 #!/usr/bin/python3
 """FileStorage Class Module"""
 import json
@@ -9,8 +8,6 @@ class FileStorage:
     """ FileStorage class that save and reloads to JSON file"""
     __file_path = "file.json"
     __objects = {}
-
-
 
     def all(self):
         """Returns the dictionary of all objects"""
@@ -45,7 +42,6 @@ class FileStorage:
             from models.state import State
             from models.base_model import BaseModel
 
-
             model_classes = {
                 "BaseModel": BaseModel,
                 "User": User,
@@ -54,7 +50,7 @@ class FileStorage:
                 "Place": Place,
                 "City": City,
                 "Amenity": Amenity,
-        }
+            }
 
             for key, value in objects.items():
                 class_name = value.get("__class__", None)
