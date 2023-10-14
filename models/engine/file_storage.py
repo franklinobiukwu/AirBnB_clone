@@ -10,6 +10,8 @@ class FileStorage:
     __file_path = "file.json"
     __objects = {}
 
+
+
     def all(self):
         """Returns the dictionary of all objects"""
         return self.__objects
@@ -43,12 +45,24 @@ class FileStorage:
             from models.state import State
             from models.base_model import BaseModel
 
+
+            model_classes = {
+                "BaseModel": BaseModel,
+                "User": User,
+                "State": State,
+                "Review": Review,
+                "Place": Place,
+                "City": City,
+                "Amenity": Amenity,
+        }
+
             for key, value in objects.items():
                 class_name = value.get("__class__", None)
                 if class_name:
-                    obj_class = eval(class_name)
+                    obj_class = model_classes[class_name]
                     obj_instance = obj_class(**value)
-                    self.__objects[key] = obj_instance  
+                    self.__objects[key] = obj_instance
+                objects = {}
 
     @classmethod
     def get_file_path(cls):

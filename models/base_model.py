@@ -22,9 +22,12 @@ class BaseModel:
             self.created_at = datetime.datetime.now()
             self.updated_at = datetime.datetime.now()
             storage.new(self)
-   
 
     def __str__(self):
+        """Return string representation of instance of class"""
+        return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
+
+    def juice(self):
         """Return string representation of instance of class"""
         return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
 

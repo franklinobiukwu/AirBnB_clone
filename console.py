@@ -20,10 +20,10 @@ class HBNBCommand(cmd.Cmd):
     app_models = ["BaseModel", "User", "Place", "State", "City", "Amenity", "Review"]
     model_classes = {
             "BaseModel": BaseModel,
-            "User": User, 
-            "State": State, 
+            "User": User,
+            "State": State,
             "Review": Review,
-            "Place": Place,  
+            "Place": Place,
             "City": City,
             "Amenity": Amenity,
         }
@@ -36,12 +36,34 @@ class HBNBCommand(cmd.Cmd):
 
         with open(file_path, "r") as file:
             dict_var = json.load(file)
-        
+
         if f"{class_name}.{id}" in dict_var:
             value = dict_var[f"{class_name}.{id}"]
-            obj_class = eval(class_name)
-            obj_instance = obj_class(value)
-            return obj_instance
+
+            class_q = self.model_classes[class_name]
+            return class_q(**value)
+
+    def find_string_rep(self, class_name=None):
+        """Prints all string representation of an instance"""
+#       TO BE IMPLEMENETED CORRECTLY
+        result_list = []
+#       Load json and get dict
+        file_path = FileStorage.get_file_path()
+
+        with open(file_path, "r") as file:
+            dict_var = json.load(file)
+
+        for key, value in dict_var.items():
+            if class_name is not None:
+                if key.split(".")[0] == class_name:
+                    class_q = self.model_classes[class_name]
+                    result_list.append(class_q(**value).juice())
+            else:
+                name_it = key.split(".")[0]
+                class_q = self.model_classes[name_it]
+                result_list.append(class_q(**value).juice())
+
+        return result_list
 
     def del_instance(self, class_name, id):
         """Delete an instance with a given class name and id"""
@@ -57,16 +79,7 @@ class HBNBCommand(cmd.Cmd):
                 return True
             else:
                 return False
-    
-    def find_string_rep(self, class_name=None):
-        #TO BE IMPLEMENETED CORRECTLY
-        result_list = []
-        if class_name is not None:
-            # Print the string representation for the specified class
-            return True
-        else:
-            # Print all the string representations from storage
-            return False
+
 
     # DO COMMANDS#
     def do_quit(self, args):
@@ -84,14 +97,14 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
         elif args not in self.app_models:
             print("** class doesn't exist **")
-        else: 
+        else:
             class_name = args
             model_class = self.model_classes[class_name]
-            
+
             new_instance = model_class()
             new_instance.save()
             print(new_instance.id)
-            
+
 
     def do_show(self, args):
         """Show string representation of an instance
@@ -108,10 +121,9 @@ class HBNBCommand(cmd.Cmd):
             if class_name not in self.app_models:
                 print("** class doesn't exist **")
             else:
-                print("About to search id")
                 show_instance = self.search_id(class_name, id)
                 print(show_instance)
-    
+
     def do_destroy(self, args):
         """Deletes an instance based on the class name and id"""
         if not args:
@@ -132,7 +144,7 @@ class HBNBCommand(cmd.Cmd):
                     deleted = self.del_instance(class_name, id)
                     if not deleted:
                         print("** no instance found **")
-    
+
     def do_all(self, args):
         """Prints all string representation of all instances based or not on the class name"""
         if args:
@@ -140,18 +152,17 @@ class HBNBCommand(cmd.Cmd):
             if class_name not in self.app_models:
                 print("** class doesn't exist **")
             else:
-                string_rep = []
                 #Implement a functioning find_string_rep()
                 string_rep = self.find_string_rep(class_name)
                 print(string_rep)
-        else: 
+        else:
             string_rep = self.find_string_rep()
             print(string_rep)
-    
+
     def do_update(self, args):
         """Updates an instance based on the class name and id by adding or updating attribute"""
-        
-            
+
+
     #EMPTYLINE 
     def emptyline(self):
         """Prevents emptyline from executing previous command"""
@@ -169,11 +180,11 @@ class HBNBCommand(cmd.Cmd):
     def help_create(self):
         """Handles the help default for create command"""
         print(f"Create instance of [class], saves to json, and print id")
-    
+
     def help_show(self):
         """Handle the help default for show command"""
         print(f"Prints the string representation of an instance based on the class name and id")
-    
+
     def help_destroy(self):
         """Handle the help default for the destroy command"""
         print(f"Deletes an instance based on the class name and id")
