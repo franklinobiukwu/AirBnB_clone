@@ -31,32 +31,33 @@ class HBNBCommand(cmd.Cmd):
     # HELPER METHODS#
     def search_id(self, class_name, id):
         """Search if id is in json file with corresponding class"""
+        search_dict = {}
         file_path = FileStorage.get_file_path()
-        # Load json file to dictionary variable
+
         with open(file_path, "r") as file:
             dict_var = json.load(file)
-        print(dict_var)
         
+        if f"{class_name}.{id}" in dict_var:
+            value = dict_var[f"{class_name}.{id}"]
+            obj_class = eval(class_name)
+            obj_instance = obj_class(value)
+            return obj_instance
+
     def del_instance(self, class_name, id):
         """Delete an instance with a given class name and id"""
-        #TO BE IMPLEMENTED CORRECTLY
-    
         file_path = FileStorage.get_file_path()
-        
-        # OPEN JSON FILE
-        with open(file_path, "r+") as file:
+
+        with open(file_path, "r") as file:
             dict_var = json.load(file)
-            
-            if class_name in dict_var and id in dict_var[class_name]:
-                del(dict_var[class_name][id])
-            
+
+            if f"{class_name}.{id}" in dict_var:
+                del dict_var[f"{class_name}.{id}"]
                 with open(file_path, "w") as file:
                     json.dump(dict_var, file)
-                
-                    return True
+                return True
             else:
                 return False
-
+    
     def find_string_rep(self, class_name=None):
         #TO BE IMPLEMENETED CORRECTLY
         result_list = []
@@ -108,8 +109,8 @@ class HBNBCommand(cmd.Cmd):
                 print("** class doesn't exist **")
             else:
                 print("About to search id")
-                self.search_id(class_name, id)
-        # Print *no inst found* if id is not for class
+                show_instance = self.search_id(class_name, id)
+                print(show_instance)
     
     def do_destroy(self, args):
         """Deletes an instance based on the class name and id"""
@@ -128,7 +129,6 @@ class HBNBCommand(cmd.Cmd):
                 if class_name not in self.app_models:
                     print("** class doesn't exist **")
                 else:
-                    #Implement a functioning del_instance()
                     deleted = self.del_instance(class_name, id)
                     if not deleted:
                         print("** no instance found **")
@@ -147,6 +147,10 @@ class HBNBCommand(cmd.Cmd):
         else: 
             string_rep = self.find_string_rep()
             print(string_rep)
+    
+    def do_update(self, args):
+        """Updates an instance based on the class name and id by adding or updating attribute"""
+        
             
     #EMPTYLINE 
     def emptyline(self):
