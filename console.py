@@ -234,31 +234,31 @@ class HBNBCommand(cmd.Cmd):
 #   HELP METHODS
     def help_EOF(self):
         """Shows exit message for EOF"""
-        print(f"Quit command to exit the program")
+        print("Quit command to exit the program")
 
     def help_quit(self):
         """Shows exit message for Quit"""
-        print(f"Quit command to exit the program")
+        print("Quit command to exit the program")
 
     def help_create(self):
         """Handles the help default for create command"""
-        print(f"Create instance of [class], saves to json, and print id")
+        print("Create instance of [class], saves to json, and print id")
 
     def help_show(self):
         """Handle the help default for show command"""
-        print(f"Prints the string representation of an instance")
+        print("Prints the string representation of an instance")
 
     def help_destroy(self):
         """Handle the help default for the destroy command"""
-        print(f"Deletes an instance based on the class name and id")
+        print("Deletes an instance based on the class name and id")
 
     def help_all(self):
         """Handle the help default for the all command"""
-        print(f"Prints all string representation of all instances.")
+        print("Prints all string representation of all instances.")
 
     def help_update(self):
         """Handle the help default for the update command"""
-        print(f"Creates and updates instances attributes of class")
+        print("Creates and updates instances attributes of class")
 
 
 if __name__ == '__main__':
