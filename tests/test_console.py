@@ -20,3 +20,4 @@ class TestConsole(TestCase):
     """
     Defines Test Class for Console Tests
     """
+    pass
