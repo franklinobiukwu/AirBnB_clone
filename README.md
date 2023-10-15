@@ -40,3 +40,54 @@ A command-line interpreter that enables users to perform some operations. The co
 
 # Execution Process
 
+To initiate the command-line interpreter, you can launch it from any supported operating system's terminal. To begin an interactive session, simply execute the following command:
+
+    ./console.py
+
+Executing this command will open the command-line interface, presenting you with a prompt, indicating that the tool is ready to accept and process your commands indefinitely until you decide to conclude the session.
+
+Alternatively, you can initiate the tool in a non-interactive mode by utilizing the subsequent command:
+
+    echo "help" | ./console.py
+
+Once the tool is running, you have the flexibility to carry out various operations directly from the command-line interface. By typing "help," you can view a comprehensive list of all available commands. Additionally, you can gather information on how to utilize any specific command from the list by using the following command structure:
+
+    help <command_name>
+
+# Example
+
+Interactive Mode:
+
+    $ ./console.py
+    (hbnb) help
+
+    Documented commands (type help <topic>):
+    ========================================
+    EOF  help  quit
+
+    (hbnb) 
+    (hbnb) 
+    (hbnb) quit
+    $
+
+Non-interactive Mode:
+
+    $ echo "help" | ./console.py
+    (hbnb)
+
+    Documented commands (type help <topic>):
+    ========================================
+    EOF  help  quit
+    (hbnb) 
+    $
+    $ cat test_help
+    help
+    $
+    $ cat test_help | ./console.py
+    (hbnb)
+
+    Documented commands (type help <topic>):
+    ========================================
+    EOF  help  quit
+    (hbnb) 
+    $/

@@ -63,3 +63,13 @@ class FileStorage:
     @classmethod
     def get_file_path(cls):
         return cls.__file_path
+
+    @property
+    def storage_objs(self):
+        """Returns private instance __objects attribute"""
+        return self.__objects
+
+    @storage_objs.setter
+    def storage_objs(self, dict):
+        """Sets __object"""
+        self.__objects = dict
