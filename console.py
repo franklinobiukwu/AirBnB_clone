@@ -30,6 +30,19 @@ class HBNBCommand(cmd.Cmd):
         }
 
     # HELPER METHODS#
+
+    def typecast_value(self, value):
+        """Typecst value"""
+        try:
+            int_value = int(value)
+            return int_value
+        except ValueError:
+            try:
+                float_value = float(value)
+                return float_value
+            except ValueError:
+                return value
+
     def search_id(self, class_name, id):
         """Search if id is in json file with corresponding class"""
         search_dict = {}
@@ -75,18 +88,22 @@ class HBNBCommand(cmd.Cmd):
         with open(file_path, "r") as file:
             dict_var = json.load(file)
 
-            if f"{class_name}.{id}" in dict_var:
-                del dict_var[f"{class_name}.{id}"]
-                with open(file_path, "w") as file:
-                    json.dump(dict_var, file)
-                return True
-            else:
-                return False
+        if f"{class_name}.{id}" in dict_var:
+            del dict_var[f"{class_name}.{id}"]
+
+            with open(file_path, "w") as file:
+                json.dump(dict_var, file)
+            storage.reload()
+            return True
+        else:
+            return False
 
     def setting_attr(self, classname, id, attribute_name, value):
         """Searchs for Instance and sets the attribute"""
 
         file_path = FileStorage.get_file_path()
+
+        value = self.typecast_value(value)
 
         with open(file_path, "r") as file:
             dict_var = json.load(file)
@@ -98,14 +115,18 @@ class HBNBCommand(cmd.Cmd):
 
             value_dict[attribute_name] = value
 
+            dict_var[instance_key] = value_dict
+
             with open(file_path, "w") as file:
                 json.dump(dict_var, file)
 
-            setattr(self, attribute_name, value)
+            storage.reload()
+
             return True
         else:
             return False
 
+    # DO METHODS
     def do_quit(self, args):
         """Quit command to exit the program"""
         return True
@@ -232,33 +253,9 @@ class HBNBCommand(cmd.Cmd):
         pass
 
 #   HELP METHODS
-    def help_EOF(self):
-        """Shows exit message for EOF"""
-        print("Quit command to exit the program")
-
     def help_quit(self):
-        """Shows exit message for Quit"""
+        """Quit command to exit the program"""
         print("Quit command to exit the program")
-
-    def help_create(self):
-        """Handles the help default for create command"""
-        print("Create instance of [class], saves to json, and print id")
-
-    def help_show(self):
-        """Handle the help default for show command"""
-        print("Prints the string representation of an instance")
-
-    def help_destroy(self):
-        """Handle the help default for the destroy command"""
-        print("Deletes an instance based on the class name and id")
-
-    def help_all(self):
-        """Handle the help default for the all command"""
-        print("Prints all string representation of all instances.")
-
-    def help_update(self):
-        """Handle the help default for the update command"""
-        print("Creates and updates instances attributes of class")
 
 
 if __name__ == '__main__':
