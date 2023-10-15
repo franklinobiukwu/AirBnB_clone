@@ -43,12 +43,14 @@ class HBNBCommand(cmd.Cmd):
 
             class_q = self.model_classes[class_name]
             return class_q(**value)
+        else:
+            return False
 
     def find_string_rep(self, class_name=None):
         """Prints all string representation of an instance"""
-#       TO BE IMPLEMENETED CORRECTLY
+
         result_list = []
-#       Load json and get dict
+
         file_path = FileStorage.get_file_path()
 
         with open(file_path, "r") as file:
@@ -80,6 +82,32 @@ class HBNBCommand(cmd.Cmd):
                 return True
             else:
                 return False
+    
+    def setting_attr(self,classname, id, attribute_name, value):
+        """Searchs for Instance and sets the attribute"""
+        
+        #OPENING THE JSON FILE
+        file_path = FileStorage.get_file_path()
+
+        with open(file_path, "r") as file:
+            dict_var = json.load(file)
+        
+        instance_key =  f"{classname}.{id}"
+        
+        #FINDING THE CLASS AND THE DICT VALUES
+        if instance_key in dict_var:
+            value_dict = dict_var[instance_key]
+            
+            value_dict[attribute_name] = value
+            
+            with open(file_path, "w") as file:
+                    json.dump(dict_var, file)
+
+            return True
+        else:
+            return False
+            
+                     
 
     # DO COMMANDS#
     def do_quit(self, args):
@@ -108,7 +136,7 @@ class HBNBCommand(cmd.Cmd):
     def do_show(self, args):
         """Show string representation of an instance
         based on class name & id"""
-        # Print *missing* if class name missing
+        # Print *missing* if class name missing+9
         if not args:
             print("** class name missing **")
         else:
@@ -121,7 +149,10 @@ class HBNBCommand(cmd.Cmd):
                 print("** class doesn't exist **")
             else:
                 show_instance = self.search_id(class_name, id)
-                print(show_instance)
+                if show_instance is False:
+                    print("** no instance found **")
+                else:
+                    print(show_instance)
 
     def do_destroy(self, args):
         """Deletes an instance based on the class name and id"""
@@ -161,7 +192,45 @@ class HBNBCommand(cmd.Cmd):
     def do_update(self, args):
         """Updates an instance based on the class name
         and id by adding or updating attribute"""
-        pass
+    
+        update_args = args.split(" ")
+
+
+        if len(update_args) < 1:
+            print("** class name missing **")
+            return
+
+        class_name = update_args[0]
+
+
+        if class_name not in self.app_models:
+            print("** class doesn't exist **")
+            return
+
+
+        if len(update_args) < 2:
+            print("** instance id missing **")
+            return
+
+        instance_id = update_args[1]
+
+        if len(update_args) < 3:
+            print("** attribute name missing **")
+            return
+
+        attribute_name = update_args[2]
+
+        if len(update_args) < 4:
+            print("** value missing **")
+            return
+
+        value = update_args[3]
+
+        instance = self.setting_attr(class_name, instance_id, attribute_name, value)
+
+        if instance is False:
+            print("** no instance found **")
+            return
 
 #   EMPTYLINE
     def emptyline(self):
@@ -192,6 +261,10 @@ class HBNBCommand(cmd.Cmd):
     def help_all(self):
         """Handle the help default for the all command"""
         print(f"Prints all string representation of all instances.")
+    
+    def help_update(self):
+        """Handle the help default for the update command"""
+        print(f"Creates and updates instances attributes of class")
 
 
 if __name__ == '__main__':
