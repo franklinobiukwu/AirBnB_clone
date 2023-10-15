@@ -6,6 +6,7 @@ from models.base_model import BaseModel
 import uuid
 from datetime import datetime
 from unittest import TestCase
+from os.path import isfile
 
 
 class TestBaseModel(TestCase):
@@ -51,3 +52,16 @@ class TestBaseModel(TestCase):
         self.assertEqual(obj.id, new_obj.id)
         self.assertEqual(obj.created_at, new_obj.created_at)
         self.assertEqual(obj.updated_at, new_obj.updated_at)
+
+    def test_save_method_creates_json_file(self):
+        """ Test if save method creates a JSON file """
+        obj = BaseModel()
+        obj.save()
+        self.assertTrue(isfile("file.json"))
+
+    def test_to_dict_method_contains_expected_keys(self):
+        """ Test the to_dict method """
+        expected_keys = ("id", "created_at", "updated_at", "__class__")
+        obj = BaseModel()
+        obj_dict = obj.to_dict()
+        self.assertEqual(sorted(list(obj_dict.keys())), sorted(expected_keys))
