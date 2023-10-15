@@ -101,6 +101,7 @@ class HBNBCommand(cmd.Cmd):
             with open(file_path, "w") as file:
                 json.dump(dict_var, file)
 
+            setattr(self, attribute_name, value)
             return True
         else:
             return False
