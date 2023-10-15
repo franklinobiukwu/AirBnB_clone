@@ -12,3 +12,7 @@ class TestBaseModel(TestCase):
     """
     Test Class for BaseModel class
     """
+
+    def test_to_dict(self):
+        obj = BaseModel()
+        self.assertIsInstance(obj.to_dict(), dict)

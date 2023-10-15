@@ -12,3 +12,9 @@ class TestFileStorage(TestCase):
     """
     Test Class for the File Storage class
     """
+
+    def test_all(self):
+        """Test if the all function returns an object"""
+        store = FileStorage()
+        result = store.all()
+        self.assertIsInstance(result, dict)
