@@ -29,6 +29,7 @@ class FileStorage:
     def reload(self):
         """Deserializes the JSON file into object(s)"""
         objects = {}
+        self.__objects = {}
 
         if os.path.isfile(self.__file_path):
             with open(self.__file_path, "r") as file:
@@ -58,7 +59,6 @@ class FileStorage:
                     obj_class = model_classes[class_name]
                     obj_instance = obj_class(**value)
                     self.__objects[key] = obj_instance
-                objects = {}
 
     @classmethod
     def get_file_path(cls):
