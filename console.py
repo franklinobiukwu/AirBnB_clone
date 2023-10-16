@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """Implemntation of the command interpreter"""
+import os
 import cmd
 import json
 from models.base_model import BaseModel
@@ -47,6 +48,8 @@ class HBNBCommand(cmd.Cmd):
         """Search if id is in json file with corresponding class"""
         search_dict = {}
         file_path = FileStorage.get_file_path()
+        if not os.path.exists(file_path):
+            return False
 
         with open(file_path, "r") as file:
             dict_var = json.load(file)
