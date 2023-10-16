@@ -112,7 +112,9 @@ class HBNBCommand(cmd.Cmd):
 
         if instance_key in dict_var:
             value_dict = dict_var[instance_key]
+
             value_dict[attribute_name] = value
+
             dict_var[instance_key] = value_dict
 
             with open(file_path, "w") as file:
@@ -206,12 +208,11 @@ class HBNBCommand(cmd.Cmd):
         """Updates an instance based on the class name
         and id by adding or updating attribute"""
 
-        update_args = args.split(" ")
-
-        if len(update_args) < 1:
+        if len(args) == 0:
             print("** class name missing **")
             return
 
+        update_args = args.split(" ")
         class_name = update_args[0]
 
         if class_name not in self.app_models:
