@@ -93,7 +93,7 @@ class HBNBCommand(cmd.Cmd):
 
             with open(file_path, "w") as file:
                 json.dump(dict_var, file)
-            storage.reload()
+
             return True
         else:
             return False
@@ -119,8 +119,6 @@ class HBNBCommand(cmd.Cmd):
 
             with open(file_path, "w") as file:
                 json.dump(dict_var, file)
-
-            storage.reload()
 
             return True
         else:
@@ -210,12 +208,11 @@ class HBNBCommand(cmd.Cmd):
         """Updates an instance based on the class name
         and id by adding or updating attribute"""
 
-        update_args = args.split(" ")
-
-        if len(update_args) < 1:
+        if len(args) == 0:
             print("** class name missing **")
             return
 
+        update_args = args.split(" ")
         class_name = update_args[0]
 
         if class_name not in self.app_models:
@@ -256,6 +253,14 @@ class HBNBCommand(cmd.Cmd):
     def help_quit(self):
         """Quit command to exit the program"""
         print("Quit command to exit the program")
+
+#   POSTCMD
+    def postcmd(self, stop, line):
+        """Executed every time user input is done executing"""
+        if line == "quit":
+            return True
+        else:
+            storage.reload()
 
 
 if __name__ == '__main__':
