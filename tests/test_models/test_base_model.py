@@ -4,9 +4,10 @@ Defines Test Class for BaseModel Class
 """
 from models.base_model import BaseModel
 import uuid
-from datetime import datetime
+import datetime
 from unittest import TestCase
 from os.path import isfile
+import re
 
 
 class TestBaseModel(TestCase):
@@ -27,8 +28,8 @@ class TestBaseModel(TestCase):
         self.assertTrue(hasattr(obj, "id"))
         self.assertTrue(hasattr(obj, "created_at"))
         self.assertTrue(hasattr(obj, "updated_at"))
-        self.assertEqual(type(obj.created_at), datetime)
-        self.assertEqual(type(obj.updated_at), datetime)
+        self.assertEqual(type(obj.created_at), datetime.datetime)
+        self.assertEqual(type(obj.updated_at), datetime.datetime)
 
     def test_obj_id(self):
         """Test if ids of two objects are different"""
@@ -65,3 +66,18 @@ class TestBaseModel(TestCase):
         obj = BaseModel()
         obj_dict = obj.to_dict()
         self.assertEqual(sorted(list(obj_dict.keys())), sorted(expected_keys))
+
+    def test_str_method(self):
+        """Test the __str__ method returns the string representation"""
+        my_model = BaseModel()
+        my_model.name = "My_First_Model"
+        my_model.my_number = 89
+        string_rep = str(my_model)
+
+        line = (
+            f"[{my_model.__class__.__name__}] "
+            f"({my_model.id}) "
+            f"{my_model.__dict__}"
+        )
+
+        self.assertEqual(string_rep, line)
