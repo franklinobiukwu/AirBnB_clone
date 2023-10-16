@@ -93,7 +93,7 @@ class HBNBCommand(cmd.Cmd):
 
             with open(file_path, "w") as file:
                 json.dump(dict_var, file)
-            storage.reload()
+
             return True
         else:
             return False
@@ -112,15 +112,11 @@ class HBNBCommand(cmd.Cmd):
 
         if instance_key in dict_var:
             value_dict = dict_var[instance_key]
-
             value_dict[attribute_name] = value
-
             dict_var[instance_key] = value_dict
 
             with open(file_path, "w") as file:
                 json.dump(dict_var, file)
-
-            storage.reload()
 
             return True
         else:
@@ -256,6 +252,14 @@ class HBNBCommand(cmd.Cmd):
     def help_quit(self):
         """Quit command to exit the program"""
         print("Quit command to exit the program")
+
+#   POSTCMD
+    def postcmd(self, stop, line):
+        """Executed every time user input is done executing"""
+        if line == "quit":
+            return True
+        else:
+            storage.reload()
 
 
 if __name__ == '__main__':
