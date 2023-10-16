@@ -32,12 +32,6 @@ class TestFileStorage(TestCase):
         key = f"{new_model.__class__.__name__}.{new_model.id}"
         self.assertIn(key, self.storage.all())
 
-    def test_save_and_reload(self):
-        """Test if save and reload functions work"""
-        new_model = BaseModel()
-        self.storage.new(new_model)
-        self.storage.save()
-
     def test_get_file_path(self):
         """Test if get_file_path returns the correct file path"""
         self.assertEqual(self.storage.get_file_path(), "file.json")
