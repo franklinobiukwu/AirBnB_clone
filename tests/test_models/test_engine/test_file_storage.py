@@ -3,7 +3,6 @@
 Define Test Class of FileStorage class
 """
 from models.engine.file_storage import FileStorage
-from json import dump, dumps, load, loads
 import os
 from unittest import TestCase
 from models.base_model import BaseModel
@@ -22,6 +21,7 @@ class TestFileStorage(TestCase):
         self.assertIsInstance(result, dict)
 
     def setUp(self):
+        super().setUp()
         self.storage = FileStorage()
         self.storage.reload()
 
