@@ -65,11 +65,22 @@ class TestFileStorage(TestCase):
         self.storage.new(new_model)
         self.storage.save()
 
-        new_storage = FileStorage()
-        new_storage.reload()
+        self.storage.reload()
+#        new_storage = FileStorage()
+#        new_storage.reload()
+
+        file_path = self.storage.get_file_path()
+        self.assertTrue(os.path.exists(file_path))
+
+        with open(file_path, "r") as file:
+            data = json.load(file)
 
         self.assertIn(new_model.__class__.__name__ + "." + new_model.id,
-                      new_storage.all())
-        reloaded_model = new_storage.all()[new_model.__class__.__name__ + "." +
+                      self.storage.all())
+        reloaded_model = self.storage.all()[new_model.__class__.__name__ + "." +
                                            new_model.id]
         self.assertEqual(reloaded_model.name, "Test Model")
+
+        objects = {key: value.to_dict()
+                   for key, value in self.storage.storage_objs.items()}
+        self.assertEqual(objects, data)
