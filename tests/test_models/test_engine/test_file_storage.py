@@ -6,6 +6,7 @@ from models.engine.file_storage import FileStorage
 import os
 from unittest import TestCase
 from models.base_model import BaseModel
+from models.user import User
 import json
 
 
@@ -66,6 +67,14 @@ class TestFileStorage(TestCase):
         self.storage.save()
 
         self.storage.reload()
+
+        user_model = User()
+        user_model.email = "roman@email.com"
+        self.storage.new(user_model)
+        self.storage.save()
+
+        self.storage.reload()
+
 #        new_storage = FileStorage()
 #        new_storage.reload()
 
@@ -77,10 +86,10 @@ class TestFileStorage(TestCase):
 
         self.assertIn(new_model.__class__.__name__ + "." + new_model.id,
                       self.storage.all())
-        reloaded_model = self.storage.all()[new_model.__class__.__name__ + "." +
-                                           new_model.id]
+        reloaded_model = self.storage.all()[new_model.__class__.__name__ +
+                                            "." + new_model.id]
         self.assertEqual(reloaded_model.name, "Test Model")
 
         objects = {key: value.to_dict()
-                   for key, value in self.storage.storage_objs.items()}
+                   for key, value in self.storage.all().items()}
         self.assertEqual(objects, data)

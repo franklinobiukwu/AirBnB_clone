@@ -69,8 +69,11 @@ class HBNBCommand(cmd.Cmd):
 
         file_path = FileStorage.get_file_path()
 
-        with open(file_path, "r") as file:
-            dict_var = json.load(file)
+        try:
+            with open(file_path, "r") as file:
+                dict_var = json.load(file)
+        except:
+            return []
 
         for key, value in dict_var.items():
             if class_name is not None:
