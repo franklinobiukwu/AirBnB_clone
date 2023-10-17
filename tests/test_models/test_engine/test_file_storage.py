@@ -54,6 +54,9 @@ class TestFileStorage(TestCase):
             data[new_model.__class__.__name__ + "." + new_model.id]["name"],
             "Test Model"
             )
+        objects = {key: value.to_dict()
+                   for key, value in self.storage.storage_objs.items()}
+        self.assertEqual(objects, data)
 
     def test_reload_method(self):
         """Test the reload() method loaded from the JSON file"""
