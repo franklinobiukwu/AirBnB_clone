@@ -61,35 +61,43 @@ class TestFileStorage(TestCase):
 
     def test_reload_method(self):
         """Test the reload() method loaded from the JSON file"""
+        storage = FileStorage()
+
+        self.assertEqual(storage.all(), {})
+
         new_model = BaseModel()
         new_model.name = "Test Model"
-        self.storage.new(new_model)
-        self.storage.save()
+        storage.new(new_model)
+        storage.save()
 
-        self.storage.reload()
+        storage.reload()
 
         user_model = User()
         user_model.email = "roman@email.com"
-        self.storage.new(user_model)
-        self.storage.save()
+        storage.new(user_model)
+        storage.save()
 
-        self.storage.reload()
+        storage.reload()
 
 #        new_storage = FileStorage()
 #        new_storage.reload()
 
-        file_path = self.storage.get_file_path()
+        key = f"{type(user_model).__name__}.{user_model.id}"
+
+        self.assertEqual(user_model.to_dict(), storage.all()[key].to_dict())
+
+        file_path = storage.get_file_path()
         self.assertTrue(os.path.exists(file_path))
 
         with open(file_path, "r") as file:
             data = json.load(file)
 
         self.assertIn(new_model.__class__.__name__ + "." + new_model.id,
-                      self.storage.all())
-        reloaded_model = self.storage.all()[new_model.__class__.__name__ +
-                                            "." + new_model.id]
+                      storage.all())
+        reloaded_model = storage.all()[new_model.__class__.__name__ +
+                                       "." + new_model.id]
         self.assertEqual(reloaded_model.name, "Test Model")
 
         objects = {key: value.to_dict()
-                   for key, value in self.storage.all().items()}
+                   for key, value in storage.all().items()}
         self.assertEqual(objects, data)
