@@ -263,7 +263,7 @@ class HBNBCommand(cmd.Cmd):
 #   POSTCMD
     def postcmd(self, stop, line):
         """Executed every time user input is done executing"""
-        if line == "quit":
+        if line == "quit" or line == "EOF":
             return True
         else:
             storage.reload()
