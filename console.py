@@ -72,7 +72,7 @@ class HBNBCommand(cmd.Cmd):
         try:
             with open(file_path, "r") as file:
                 dict_var = json.load(file)
-        except:
+        except FileNotFoundError:
             return []
 
         for key, value in dict_var.items():
